@@ -1,9 +1,11 @@
 from sensor_msgs.msg import LaserScan, CompressedImage
+from geometry_msgs.msg import Twist
 
 # 메시지 타입 매핑
 MESSAGE_TYPES = {
     'LaserScan': LaserScan,
     'CompressedImage': CompressedImage,
+    'Twist':Twist,
 }
 
 # 통합된 토픽 설정 - 콜백 함수는 나중에 동적으로 할당
@@ -14,17 +16,23 @@ TOPICS = {
     #    'qos': QoS 값,
     #    'direction': 통신 방향 ('publish', 'subscribe', 'both')
     # }
-    # '/robot/scan': {
-    #     'msg_type': 'LaserScan',
-    #     'channel': 'laserscan',
-    #     'qos': 10,
-    #     'direction': 'subscribe'  # 양방향 통신
-    # },
-    '/video/compressed': {
+    '/cmd_vel': {
+        'msg_type': 'Twist',
+        'channel': 'twist',
+        'qos': 10,
+        'direction': 'subscribe'  # 양방향 통신
+    },
+    '/scan': {
+        'msg_type': 'LaserScan',
+        'channel': 'laserscan',
+        'qos': 10,
+        'direction': 'publish'  # 양방향 통신
+    },
+    '/camera/color/image_raw/compressed': {
         'msg_type': 'CompressedImage',
         'channel': 'image',
         'qos': 10,
-        'direction': 'subscribe'  # 양방향 통신
+        'direction': 'publish'  # 양방향 통신
     },
 }
 

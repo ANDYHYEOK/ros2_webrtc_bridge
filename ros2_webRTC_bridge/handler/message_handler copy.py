@@ -43,24 +43,6 @@ class MessageHandler:
         return image_msg
     
     @staticmethod
-    def process_twist(msg):
-        """Twist 메시지를 JSON으로 변환"""
-        twist_data = {
-            "type": "twist",
-            "linear": {
-                "x": msg.linear.x,
-                "y": msg.linear.y,
-                "z": msg.linear.z
-            },
-            "angular": {
-                "x": msg.angular.x,
-                "y": msg.angular.y,
-                "z": msg.angular.z
-            }
-        }
-        return twist_data
-    
-    @staticmethod
     def convert_scan_json_to_msg(json_data):
         """JSON 데이터를 LaserScan 메시지로 변환"""
         from sensor_msgs.msg import LaserScan
@@ -101,24 +83,6 @@ class MessageHandler:
         msg.data = base64.b64decode(json_data["data"])
         
         return msg
-    
-    @staticmethod
-    def convert_twist_json_to_msg(json_data):
-        """JSON 데이터를 Twist 메시지로 변환"""
-        from geometry_msgs.msg import Twist, Vector3
-        
-        msg = Twist()
-        # 선형 속도 설정
-        msg.linear.x = json_data["linear"]["x"]
-        msg.linear.y = json_data["linear"]["y"]
-        msg.linear.z = json_data["linear"]["z"]
-        
-        # 각속도 설정
-        msg.angular.x = json_data["angular"]["x"]
-        msg.angular.y = json_data["angular"]["y"]
-        msg.angular.z = json_data["angular"]["z"]
-        
-        return msg
 
 # 메시지 타입별 처리 및 변환 함수 매핑
 MESSAGE_HANDLERS = {
@@ -129,10 +93,6 @@ MESSAGE_HANDLERS = {
     'CompressedImage': {
         'to_json': MessageHandler.process_image,
         'from_json': MessageHandler.convert_image_json_to_msg
-    },
-    'Twist': {
-        'to_json': MessageHandler.process_twist,
-        'from_json': MessageHandler.convert_twist_json_to_msg
     }
 }
 
@@ -175,12 +135,6 @@ def receive_msg_from_webrtc(node, json_str):
             msg = MESSAGE_HANDLERS['CompressedImage']['from_json'](json_data)
             node.get_logger().info(f"WebRTC에서 CompressedImage 메시지 수신: {topic}")
             return topic, 'CompressedImage', msg
-            
-        elif msg_type == "twist":
-            # Twist 메시지로 변환
-            msg = MESSAGE_HANDLERS['Twist']['from_json'](json_data)
-            node.get_logger().info(f"WebRTC에서 Twist 메시지 수신: {topic}")
-            return topic, 'Twist', msg
             
         else:
             node.get_logger().error(f"알 수 없는 메시지 타입: {msg_type}")
