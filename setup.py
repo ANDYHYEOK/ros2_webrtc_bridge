@@ -7,8 +7,8 @@ setup(
     version='0.0.0',
     packages=find_packages(exclude=['test']),
     data_files=[
-        # ('share/ament_index/resource_index/packages',
-        #     ['resource/' + package_name]),
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
     ],
     install_requires=['setuptools'],
@@ -20,7 +20,8 @@ setup(
     # tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "l =  ros2_webrtc_bridge.main:main",
+            "host = ros2_webrtc_bridge.host_main:entry_point",
+            "client = ros2_webrtc_bridge.client_main:entry_point"
         ],
     },
 )

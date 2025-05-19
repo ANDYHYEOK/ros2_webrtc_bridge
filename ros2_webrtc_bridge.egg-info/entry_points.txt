@@ -1,0 +1,3 @@
+[console_scripts]
+client = ros2_webrtc_bridge.client_main:main
+host = ros2_webrtc_bridge.host_main:main
